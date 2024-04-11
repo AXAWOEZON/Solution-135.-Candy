@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    // Function to distribute candies based on children's ratings
+    int candy(vector<int>& ratings) {
+        // Disabling synchronization for input and output streams
+        ios::sync_with_stdio(false), cin.tie(0), cout.tie(0);
+
+        // Get the number of children
+        int n = ratings.size();
+
+        // Initialize a vector to store the number of candies for each child,
+        // initially assigning one candy to each child
+        vector<int> candi(n, 1);
+
+        // Initialize a vector (not used in the code)
+        vector<int> index(n, 1);
+
+        // Iterate through the ratings from the second child
+        for (int i = 1; i < n; i++) {
+            // If the current child's rating is higher than the previous one,
+            // assign one more candy to the current child than to the previous one
+            if (ratings[i] > ratings[i - 1]) {
+                candi[i] = candi[i - 1] + 1;
+            }
+        }
+
+        // Store the total number of candies initially as the number of candies given to the last child
+        int totalCandi = candi[n - 1];
+
+        // Iterate through the ratings in reverse order starting from the second last child
+        for (int i = n - 2; i >= 0; i--) {
+            // If the current child's rating is higher than the next one,
+            // compare their candy counts and assign the maximum plus one candy to the current child
+            if (ratings[i] > ratings[i + 1]) {
+                candi[i] = max(candi[i], candi[i + 1] + 1);
+            }
+            // Add the number of candies given to the current child to the total count
+            totalCandi += candi[i];
+        }
+        
+        // Return the total number of candies distributed to all children
+        return totalCandi;
+    }
+};
+int main()
+{
+    Solution s;
+
+    vector<int> r = { 1, 0, 2 };
+
+    cout << s.candy(r);
+
+    return 0;
+}
